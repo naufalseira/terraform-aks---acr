@@ -19,5 +19,5 @@ variable "admin_username" {
 variable "admin_password" {
   type        = string
   description = "The admin password for the Windows node pool."
-  default     = "Passw0rd1234Us!"
+  default     = "azureuser"
 }
