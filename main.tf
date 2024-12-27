@@ -50,7 +50,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name               = "systempool"
-    vm_size            = "Standard_D2_v2"
+    vm_size            = "Standard_B2ps_v2"
     type               = "VirtualMachineScaleSets"
     min_count          = 1
     max_count          = 3
@@ -65,11 +65,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  windows_profile {
-    admin_username = var.admin_username
-    admin_password = var.admin_password
-  }
-
   network_profile {
     network_plugin    = "azure"
     load_balancer_sku = "standard"  # Required for availability zones
@@ -80,22 +75,5 @@ resource "azurerm_kubernetes_cluster" "aks" {
     expander                   = "random"
     scale_down_delay_after_add = "10m"
     scale_down_unneeded        = "10m"
-  }
-}
-
-resource "azurerm_kubernetes_cluster_node_pool" "win" {
-  name                  = random_string.azurerm_kubernetes_cluster_node_pool.result
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
-  vm_size              = "Standard_D4s_v3"
-  enable_auto_scaling = true
-  min_count            = 1
-  max_count            = 3
-  os_type              = "Windows"
-  zones                = [1, 2, 3]  # Enable availability zones for Windows nodes
-  
-  # Add tags for better resource management
-  tags = {
-    Environment = "Production"
-    Purpose     = "Windows"
   }
 }
