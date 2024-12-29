@@ -38,6 +38,26 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.1.0.0/24"]
 }
 
+resource "azurerm_container_registry" "acr" {
+  name                = var.acr_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                = "Standard"
+  admin_enabled      = true
+
+  tags = {
+    Environment = "Production"
+  }
+}
+
+# Grant AKS pull access to ACR
+resource "azurerm_role_assignment" "aks_acr" {
+  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+  role_definition_name            = "AcrPull"
+  scope                           = azurerm_container_registry.acr.id
+  skip_service_principal_aad_check = true
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = random_pet.azurerm_kubernetes_cluster_name.id
   location            = azurerm_resource_group.rg.location
@@ -50,12 +70,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name               = "systempool"
-    vm_size            = "Standard_B2ps_v2"
+    vm_size            = "Standard_B2ls_v2" # For intel-based containers
     type               = "VirtualMachineScaleSets"
     min_count          = 1
     max_count          = 3
     vnet_subnet_id     = azurerm_subnet.subnet.id
-    zones              = [1, 2, 3]  # Enable availability zones
+    zones              = [1, 2]  # Enable availability zones
     enable_auto_scaling = true
     
     # Add tags for better resource management
