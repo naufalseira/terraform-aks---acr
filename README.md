@@ -12,7 +12,7 @@ This Terraform configuration creates an Azure Kubernetes Service (AKS) cluster w
 
 ## Prerequisites
 
-- [Terraform](https://www.terraform.io/downloads.html) >= 1.0
+- [Terraform](https://www.terraform.io/downloads.html) >= 3.0
 - Azure CLI installed and authenticated
 - Azure subscription
 
