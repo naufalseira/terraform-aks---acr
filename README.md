@@ -16,16 +16,6 @@ This Terraform configuration creates an Azure Kubernetes Service (AKS) cluster w
 - Azure CLI installed and authenticated
 - Azure subscription
 
-## Configuration
-
-### Variables
-
-The following variables can be configured in `variables.tf` or via command line:
-
-- `resource_group_location` (default: "southeastasia")
-- `resource_group_name_prefix` (default: "rg")
-- `acr_name` (default: "naufalseira")
-
 ## Usage
 
 1. Prepare your working directory:
